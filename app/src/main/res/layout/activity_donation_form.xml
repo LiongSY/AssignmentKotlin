@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    android:id="@+id/DonateForm"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FEFEFE"
+    android:orientation="vertical"
+    tools:context=".DonateForm">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/formToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginTop="-1dp"
+        android:background="#4B9EDC"
+
+        />
+
+
+    <TextView
+        android:id="@+id/DonateFormDetails"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/formToolbar"
+        android:layout_marginLeft="@dimen/Side_Margin"
+        android:layout_marginBottom="-86dp"
+        android:text="Donation Details"
+        android:textAlignment="textStart"
+        android:textColor="#EDB800"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/DonateFormDetails"
+        android:layout_alignBottom="@+id/DonateFormDetails"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="-50dp"
+        android:fontFamily="sans-serif"
+        android:text="NAME:"
+        android:textColor="#EE000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/name_field"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/name"
+        android:layout_alignBottom="@+id/name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="213dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="-64dp"
+        android:width="1dp"
+        android:background="@drawable/edittext_background"
+        android:ems="10"
+        android:hint="Enter your name"
+        android:inputType="text|textPersonName|textCapWords"
+        android:textColorHighlight="#AAAAAA" />
+
+    <TextView
+        android:id="@+id/contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/name_field"
+        android:layout_alignBottom="@+id/name_field"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="-50dp"
+        android:fontFamily="sans-serif"
+        android:text="CONTACT:"
+        android:textColor="#EE000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/contact_field"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/contact"
+        android:layout_alignBottom="@+id/contact"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="-50dp"
+        android:width="1dp"
+        android:background="@drawable/edittext_background"
+        android:ems="10"
+        android:hint="Enter your contact"
+        android:inputType="phone" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/contact_field"
+        android:layout_alignBottom="@+id/contact_field"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="-50dp"
+        android:fontFamily="sans-serif"
+        android:text="AMOUNT:"
+        android:textColor="#EE000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/amount_field"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/amount"
+        android:layout_alignBottom="@+id/amount"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="-50dp"
+        android:width="1dp"
+        android:background="@drawable/edittext_background"
+        android:ems="10"
+        android:hint="Enter your donate amount"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/donate_button"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_alignStart="@+id/amount_field"
+        android:layout_alignBottom="@+id/amount_field"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="-100dp"
+        android:backgroundTint="@color/purple_200"
+        android:text="Next"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
+</layout>
