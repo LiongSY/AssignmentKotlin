@@ -8,33 +8,31 @@ import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 
-class DonationRecord : AppCompatActivity() {
+class DonationDraftRecord : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
-    private lateinit var userRecyclerview: RecyclerView
-    private lateinit var userArrayList: ArrayList<Donation>
+    private lateinit var userRecyclerview : RecyclerView
+    private lateinit var userArrayList : ArrayList<Donation>
     private lateinit var myAdapter: DonationAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_donation_record)
+        setContentView(R.layout.activity_donation_draft_record)
+
         userRecyclerview = findViewById(R.id.userList)
         userRecyclerview.layoutManager = LinearLayoutManager(this)
         userRecyclerview.setHasFixedSize(true)
-
-        val draftBtn = findViewById<Button>(R.id.draft_btn)
-
-        draftBtn.setOnClickListener(View.OnClickListener {
-            val i = Intent(this, DonationDraftRecord::class.java)
-            startActivity(i)
-        })
 
         userArrayList = arrayListOf()
 
@@ -52,7 +50,7 @@ class DonationRecord : AppCompatActivity() {
     private fun EventChangeListener(email: String) {
         db = FirebaseFirestore.getInstance()
 
-        db.collection("donations")
+        db.collection("donations_draft")
             .whereEqualTo("email", email) // Change "emaill" to match your field name
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(
@@ -77,5 +75,4 @@ class DonationRecord : AppCompatActivity() {
             })
 
     }
-
 }

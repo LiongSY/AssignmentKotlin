@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,6 +38,14 @@ class DonationAdapter(private val donationList : ArrayList<Donation>, private va
             // Call a function to delete the item from Firestore
             deleteItemFromFirestore(userID, position, currentitem,userEmail) // You need to define this function
         }
+
+        holder.record.setOnClickListener(View.OnClickListener {
+            val intent = Intent(holder.itemView.context, DonationRecordDetails::class.java)
+            intent.putExtra("id",userID)
+            holder.itemView.context.startActivity(intent)
+        })
+
+
     }
 
     private fun deleteItemFromFirestore(id: String?,position: Int, currentitem: Donation,email:String?) {
@@ -96,6 +103,7 @@ class DonationAdapter(private val donationList : ArrayList<Donation>, private va
         val amount : TextView = itemView.findViewById(R.id.amountText)
 
         val dltBtn : Button = itemView.findViewById(R.id.dlt_btn)
+        val record : CardView = itemView.findViewById(R.id.record_cardView)
 
     }
 
