@@ -1,4 +1,4 @@
-package com.example.assignment
+package com.example.assignment.DonationModule
 
 
 import android.content.Intent
@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.databinding.DataBindingUtil
-import com.example.assignment.databinding.ActivityMainBinding
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.assignment.R
 
 class DonationForm : AppCompatActivity() {
 

@@ -1,11 +1,11 @@
-package com.example.assignment
+package com.example.assignment.DonationModule
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import com.example.assignment.R
 
 class DonationCompleted : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class DonationCompleted : AppCompatActivity() {
 
         viewRecordBtn.setOnClickListener{
 
-            val i=Intent(this,DonationRecord::class.java)
+            val i=Intent(this, DonationRecord::class.java)
             startActivity(i)
         }
 

@@ -16,33 +16,33 @@
             android:name=".DonationDraftRecordDetails"
             android:exported="false" />
         <activity
-            android:name=".DonationRecordDetails"
+            android:name=".DonationModule.DonationRecordDetails"
             android:exported="false" />
         <activity
-            android:name=".DonationDraftRecord"
+            android:name=".DonationModule.DonationDraftRecord"
             android:exported="false" />
         <activity
             android:name=".donation_page"
             android:exported="false" />
         <activity
-            android:name=".DonationRecord"
+            android:name=".DonationModule.DonationRecord"
             android:exported="false"
             android:label="@string/title_activity_donation_record"
             android:theme="@style/Theme.Assignment" />
         <activity
-            android:name=".DonationCompleted"
+            android:name=".DonationModule.DonationCompleted"
             android:exported="false" />
         <activity
             android:name=".DanationCompleted"
             android:exported="false" />
         <activity
-            android:name=".DonationPayment"
+            android:name=".DonationModule.DonationPayment"
             android:exported="false" />
         <activity
-            android:name=".DonationForm"
+            android:name=".DonationModule.DonationForm"
             android:exported="false" />
         <activity
-            android:name=".DonationPage"
+            android:name=".DonationModule.DonationPage"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

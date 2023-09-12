@@ -1,9 +1,10 @@
-package com.example.assignment
+package com.example.assignment.DonationModule
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.assignment.R
 
 class DonationPage : AppCompatActivity() {
 
@@ -14,13 +15,13 @@ class DonationPage : AppCompatActivity() {
         val donateBtn:Button =findViewById(R.id.donate)
 
         donateBtn.setOnClickListener{
-        val i = Intent(this,DonationForm::class.java)
+        val i = Intent(this, DonationForm::class.java)
             startActivity(i)
         }
 
         val viewRecord = findViewById<Button>(R.id.recordBtn)
         viewRecord.setOnClickListener{
-            val i = Intent(this,DonationRecord::class.java)
+            val i = Intent(this, DonationRecord::class.java)
             startActivity(i)
         }
 
