@@ -1,4 +1,4 @@
-package com.example.assignment.DonationModule
+package com.example.assignment.DonationModule.DonationModuleAdapter
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.DonationModule.Donation
+import com.example.assignment.DonationModule.DonationRecordDetails
 import com.example.assignment.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore

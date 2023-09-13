@@ -2,4 +2,5 @@
 <resources>
     <dimen name="Side_Margin">20dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="big_margin">100dp</dimen>
 </resources>

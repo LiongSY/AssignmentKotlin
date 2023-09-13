@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.DonationModule.DonationModuleAdapter.DonationAdapter
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -26,6 +28,9 @@ class DonationRecord : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_record)
+        setSupportActionBar(findViewById(R.id.toolbar2))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         userRecyclerview = findViewById(R.id.userList)
         userRecyclerview.layoutManager = LinearLayoutManager(this)
         userRecyclerview.setHasFixedSize(true)
@@ -46,7 +51,6 @@ class DonationRecord : AppCompatActivity() {
         val email:String = "tengjie419@gmail.com"
 
         EventChangeListener(email)
-
 
     }
 
@@ -77,6 +81,18 @@ class DonationRecord : AppCompatActivity() {
                 }
             })
 
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle the Up button click here
+                onBackPressed() // or navigate to the parent activity
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
 }

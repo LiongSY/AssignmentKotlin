@@ -1,4 +1,4 @@
-package com.example.assignment.DonationModule
+package com.example.assignment.DonationModule.DonationModuleAdapter
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,6 +12,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.DonationModule.Donation
+import com.example.assignment.DonationModule.DonationPayment
 import com.example.assignment.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -77,7 +79,7 @@ class DonationDraftAdapter(private val donationList : ArrayList<Donation>, priva
 
             val currentID = currentitem.id
 
-            val i = Intent(holder.itemView.context,DonationPayment::class.java)
+            val i = Intent(holder.itemView.context, DonationPayment::class.java)
             i.putExtra("donationData",donationData)
             i.putExtra("draftID",currentID)
             holder.itemView.context.startActivity(i)

@@ -2,6 +2,7 @@ package com.example.assignment.DonationModule
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
 import com.example.assignment.R
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,6 +12,8 @@ class DonationRecordDetails : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_record_details)
+        setSupportActionBar(findViewById(R.id.toolbar3))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val donationData = intent.getSerializableExtra("id")
 
@@ -62,6 +65,17 @@ class DonationRecordDetails : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle the Up button click here
+                onBackPressed() // or navigate to the parent activity
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
 }

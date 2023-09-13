@@ -3,8 +3,10 @@ package com.example.assignment.DonationModule
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.DonationModule.DonationModuleAdapter.DonationDraftAdapter
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -22,7 +24,8 @@ class DonationDraftRecord : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_draft_record)
-
+        setSupportActionBar(findViewById(R.id.toolbar4))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         donationRecyclerview = findViewById(R.id.userList)
         donationRecyclerview.layoutManager = LinearLayoutManager(this)
@@ -67,4 +70,15 @@ class DonationDraftRecord : AppCompatActivity() {
             })
 
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle the Up button click here
+                onBackPressed() // or navigate to the parent activity
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
 }

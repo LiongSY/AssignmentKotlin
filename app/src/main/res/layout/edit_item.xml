@@ -9,37 +9,39 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_margin="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/purple_500"
+            android:background="@color/teal_200"
             android:elevation="15dp"
             android:gravity="center"
             android:padding="10dp"
             android:text="Edit the Record Information"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="19sp"
             android:textStyle="bold" />
+
         <EditText
             android:id="@+id/nameET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_background"
             android:hint="Name"
             android:inputType="textPersonName"
+            android:padding="15dp"
             android:textColor="@color/purple_500"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:padding="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/amountET"
@@ -49,6 +51,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp"
+            android:background="@drawable/shape_background"
             android:hint="Amount(RM)"
             android:inputType="number|numberDecimal"
             android:padding="15dp"
@@ -64,6 +67,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp"
+            android:background="@drawable/shape_background"
             android:hint="Phone No."
             android:inputType="phone"
             android:padding="15dp"

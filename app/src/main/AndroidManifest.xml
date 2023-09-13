@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,34 +15,40 @@
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
         <activity
-            android:name=".DonationDraftRecordDetails"
+            android:name=".DonationModule.DonationReport"
+            android:label="Donation Report"
+            android:parentActivityName=".DonationModule.DonationPage"
             android:exported="false" />
         <activity
             android:name=".DonationModule.DonationRecordDetails"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Record Details"
+            android:parentActivityName=".DonationModule.DonationRecord" />
         <activity
             android:name=".DonationModule.DonationDraftRecord"
-            android:exported="false" />
-        <activity
-            android:name=".donation_page"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Donation Draft"
+            android:parentActivityName=".DonationModule.DonationRecord" />
         <activity
             android:name=".DonationModule.DonationRecord"
             android:exported="false"
-            android:label="@string/title_activity_donation_record"
+            android:label="Donation Record"
+            android:parentActivityName=".DonationModule.DonationPage"
             android:theme="@style/Theme.Assignment" />
         <activity
             android:name=".DonationModule.DonationCompleted"
-            android:exported="false" />
-        <activity
-            android:name=".DanationCompleted"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".DonationModule.DonationPage" />
         <activity
             android:name=".DonationModule.DonationPayment"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Payment"
+            android:parentActivityName=".DonationModule.DonationForm" />
         <activity
             android:name=".DonationModule.DonationForm"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Donation Form"
+            android:parentActivityName=".DonationModule.DonationPage" />
         <activity
             android:name=".DonationModule.DonationPage"
             android:exported="false" />

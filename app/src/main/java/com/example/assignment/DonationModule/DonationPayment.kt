@@ -1,14 +1,26 @@
 package com.example.assignment.DonationModule
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.assignment.R
 import com.example.assignment.databinding.ActivityMainBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,10 +41,13 @@ class DonationPayment : AppCompatActivity() {
     private val formattedDate: String = dateFormat.format(currentDate)
     private lateinit var binding: ActivityMainBinding
 
-
+    private val CHANNEL_ID = "channel_id_example_01"
+    private val notificationId = 101
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_payment)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val donationData = intent.getSerializableExtra("donationData") as? HashMap<String, String>
         payMethod = findViewById(R.id.method_spn)
@@ -93,6 +108,8 @@ class DonationPayment : AppCompatActivity() {
                             Toast.makeText(this, "ID is null",Toast.LENGTH_LONG)
                         }
                         showToast("Donation submitted successfully!")
+                        createNotificationChannel(amount)
+                        sendNotification(amount)
                         val intent = Intent(this, DonationCompleted::class.java)
                         intent.putExtra("donationData", donationData)
                         startActivity(intent)
@@ -115,22 +132,6 @@ class DonationPayment : AppCompatActivity() {
                     .addOnSuccessListener {
                         // Donation data added successfully
                         showToast("Donation has been save into draft!")
-//                        val intent = Intent(this, DonationDraft::class.java)
-//                        startActivity(intent)
-
-                        val recipientEmail = "lawtj-wm20@student.tarc.edu.my"
-                        val emailSubject = "Payment Confirmation"
-                        val emailMessage =
-                            "Thank you for your payment. Your payment of $amount has been confirmed."
-
-                        /*             runBlocking {
-                                         try {
-                                             sendConfirmationEmail(recipientEmail, emailSubject, emailMessage)
-                                         } catch (e: Exception) {
-                                             e.printStackTrace()
-                                         }
-                                     }*/
-
 
                     }
                     .addOnFailureListener {
@@ -158,14 +159,76 @@ class DonationPayment : AppCompatActivity() {
         return newDocumentReference.id
     }
 
+    private fun createNotificationChannel(amount: String?) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Donation Payment Confirmation"
+            val descriptionText = "Donate Successfully : Amount : $amount has been received by us"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
+    private fun sendNotification(amount: String?) {
+        val intent  = Intent(this,DonationRecord::class.java).apply{
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent:PendingIntent = PendingIntent.getActivity(this,0, intent,0)
+        val bitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.notification_icon)
+        val bitmapLargeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_warning)
+
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle("Payment Confirmation")
+            .setContentText("Donate Successfully : Amount : $amount ")
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("has been received by us"))
+            .setLargeIcon(bitmapLargeIcon)
+            .setStyle(NotificationCompat.BigPictureStyle()
+                .bigPicture(bitmap))
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+        with(NotificationManagerCompat.from(this)){
+            if (ActivityCompat.checkSelfPermission(this@DonationPayment,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
+            notify(notificationId, builder.build())
+        }
+
+    }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-
-
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle the Up button click here
+                onBackPressed() // or navigate to the parent activity
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
 }
