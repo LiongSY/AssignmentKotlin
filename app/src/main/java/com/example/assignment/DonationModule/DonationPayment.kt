@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.R
+import com.example.assignment.UserManagement.DBHelper
 import com.example.assignment.databinding.ActivityMainBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.ParseException
@@ -43,7 +44,7 @@ class DonationPayment : AppCompatActivity() {
     private val currentDate: Date = calendar.time
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     private val formattedDate: String = dateFormat.format(currentDate)
-    private val dbcon:DBConnection = DBConnection(this@DonationPayment,"Education",1)
+    private val dbcon:DBHelper = DBHelper(this@DonationPayment)
     private val CHANNEL_ID = "channel_id_example_01"
     private val notificationId = 101
     private lateinit var cardNum:EditText

@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBConnection(var context: Context, private var dbName: String, var dbVersion: Int) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
+class DBConnection(context: Context) : SQLiteOpenHelper(context, "Education", null, 8) {
     companion object{
         val tableName:String = "DonationDraft"
         val col1:String = "id"

@@ -6,10 +6,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Bitmap
+import com.example.assignment.DonationModule.Database.DBConnection
 import java.io.ByteArrayOutputStream
 
 
-class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 6) {
+class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 8) {
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE Userdata (email TEXT PRIMARY KEY, firstName TEXT, lastName TEXT, phoneNum TEXT, password TEXT, confirmPass TEXT, image BLOB, position TEXT)"
@@ -18,6 +20,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 
         db?.execSQL(
             "CREATE TABLE EmailType (id INTEGER PRIMARY KEY AUTOINCREMENT, schoolName TEXT, typeName TEXT)"
         )
+        db?.execSQL("CREATE TABLE DonationDraft (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, date TEXT, amount TEXT, email TEXT, method TEXT, contact TEXT)")
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -25,6 +29,69 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 
             db?.execSQL("ALTER TABLE Userdata ADD COLUMN image BLOB")
             db?.execSQL("ALTER TABLE Userdata ADD COLUMN position TEXT")
         }
+    }
+
+
+    fun insert(name:String,date:String,amount:String,email:String,method:String,contact:String):Long{
+        val db:SQLiteDatabase =this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("name", name)
+        contentValues.put("date",date)
+        contentValues.put("amount", amount)
+        contentValues.put("email",email)
+        contentValues.put("method", method)
+        contentValues.put("contact",contact)
+        val result:Long = db.insert("DonationDraft",null,contentValues)
+        return result
+    }
+
+    fun retrieveDonationDrafts(): Cursor {
+        val db: SQLiteDatabase = readableDatabase
+        val columns = arrayOf(
+            DBConnection.col1,
+            DBConnection.col2,
+            DBConnection.col3,
+            DBConnection.col4,
+            DBConnection.col5,
+            DBConnection.col6,
+            DBConnection.col7
+        )
+        return db.query(DBConnection.tableName, columns, null, null, null, null, null)
+    }
+
+    fun retrieveDonationDraftByRecordId(recordId: String): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM ${DBConnection.tableName} WHERE ${DBConnection.col1} = ?", arrayOf(recordId))
+    }
+
+    fun deleteDonationDraftByRecordId(recordId: String) {
+        val db = this.writableDatabase
+        db.delete(DBConnection.tableName, "${DBConnection.col1} = ?", arrayOf(recordId))
+    }
+
+    fun deleteDonationDraft(id: String?): Int {
+        val db = writableDatabase
+        val selection = "${DBConnection.col1} = ?"
+        val selectionArgs = arrayOf(id)
+
+        val deletedRows = db.delete(DBConnection.tableName, selection, selectionArgs)
+        db.close()
+        return deletedRows
+    }
+
+    fun updateDonationDraft(id: String?, name: String, amount: String, contact: String): Int {
+        val db = writableDatabase
+        val values = ContentValues()
+        values.put(DBConnection.col2, name)
+        values.put(DBConnection.col4, amount)
+        values.put(DBConnection.col7, contact)
+
+        val selection = "${DBConnection.col1} = ?"
+        val selectionArgs = arrayOf(id)
+
+        val updatedRows = db.update(DBConnection.tableName, values, selection, selectionArgs)
+        db.close()
+        return updatedRows
     }
 
     fun insertData(

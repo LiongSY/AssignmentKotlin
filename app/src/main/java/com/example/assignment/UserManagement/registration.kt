@@ -103,7 +103,6 @@ class registration : AppCompatActivity() {
                                                 position
                                             )
 
-                                            // 在此处将用户数据保存到 Firebase 实时数据库
                                             val databaseReference =
                                                 FirebaseDatabase.getInstance().reference
                                             val userRef = databaseReference.child("users")

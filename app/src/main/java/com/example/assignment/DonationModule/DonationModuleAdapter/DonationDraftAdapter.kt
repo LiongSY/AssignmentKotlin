@@ -16,13 +16,14 @@ import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.DonationModule.Donation
 import com.example.assignment.DonationModule.DonationPayment
 import com.example.assignment.R
+import com.example.assignment.UserManagement.DBHelper
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DonationDraftAdapter(
     private val donationList: ArrayList<Donation>,
     private val recyclerView: RecyclerView,
-    private val dbConnection: DBConnection // Pass the DBConnection instance
+    private val dbConnection: DBHelper // Pass the DBConnection instance
 ) : RecyclerView.Adapter<DonationDraftAdapter.MyViewHolder>() {
 
     val db = FirebaseFirestore.getInstance()

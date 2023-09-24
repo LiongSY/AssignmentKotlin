@@ -28,7 +28,6 @@ class DonationReport : AppCompatActivity() {
     private lateinit var userRecyclerview: RecyclerView
     private lateinit var userArrayList: ArrayList<Donation>
     private lateinit var myAdapter: DonationReportAdapter
-    private val dbcon: DBConnection = DBConnection(this,"Education",1)
 
     private var totalDonationAmount: Float = 0.0f
     private val calendar: Calendar = Calendar.getInstance()

@@ -13,13 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.DonationModule.DonationModuleAdapter.DonationDraftAdapter
 import com.example.assignment.R
+import com.example.assignment.UserManagement.DBHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DonationDraftRecord : AppCompatActivity() {
+    // Initialize the DBConnection instance
+    private var dbConnection:DBHelper = DBHelper(this)
 
-    private lateinit var dbConnection: DBConnection
     private lateinit var donationRecyclerview: RecyclerView
     private lateinit var donationArrayList: ArrayList<Donation>
     private lateinit var myAdapter: DonationDraftAdapter
@@ -61,8 +63,7 @@ class DonationDraftRecord : AppCompatActivity() {
 
         donationArrayList = arrayListOf()
 
-        // Initialize the DBConnection instance
-        dbConnection = DBConnection(this, "Education", 1)
+
 
         myAdapter = DonationDraftAdapter(donationArrayList, donationRecyclerview, dbConnection)
         donationRecyclerview.adapter = myAdapter
