@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -15,19 +16,22 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.R
 import com.example.assignment.databinding.ActivityMainBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-
+import java.util.Locale
 
 
 class DonationPayment : AppCompatActivity() {
@@ -39,10 +43,13 @@ class DonationPayment : AppCompatActivity() {
     private val currentDate: Date = calendar.time
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     private val formattedDate: String = dateFormat.format(currentDate)
-    private lateinit var binding: ActivityMainBinding
-
+    private val dbcon:DBConnection = DBConnection(this@DonationPayment,"Education",1)
     private val CHANNEL_ID = "channel_id_example_01"
     private val notificationId = 101
+    private lateinit var cardNum:EditText
+    private lateinit var cardDate:EditText
+    private lateinit var cvv:EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_payment)
@@ -55,6 +62,10 @@ class DonationPayment : AppCompatActivity() {
         val method = payMethod.selectedItem.toString()
         // Check if the donation data is not null
         val draftID = intent.getStringExtra("draftID")
+
+        cardNum=findViewById(R.id.cardNumberET)
+        cardDate=findViewById(R.id.cardDateET)
+        cvv=findViewById(R.id.cvvET)
 
         donationData?.let {
             val name = it["name"]
@@ -78,74 +89,99 @@ class DonationPayment : AppCompatActivity() {
 
             payBtn = findViewById(R.id.payBtn)
             payBtn.setOnClickListener(View.OnClickListener {
-                // Add the donation data to the Firestore collection
-                db.collection("donations")
-                    .add(donationData)
-                    .addOnSuccessListener {
-                        // Donation data added successfully
-
-                        //check id value
-                        if(draftID != null) {
-                            //Delete the record if the draft record is exist
-                            val dbCollection = db.collection("donations_draft")
-                            val query = dbCollection.whereEqualTo("id", draftID)
-
-                            query.get()
-                                .addOnSuccessListener { querySnapshot ->
-                                    for (document in querySnapshot.documents) {
-                                        // Delete each document that matches the query
-                                        document.reference.delete()
-                                        // Add your logic here after deletion if needed
-                                    }
-                                }.addOnFailureListener { e ->
-                                    // Handle any errors that occur during the query or delete operation
-                                    Log.e(
-                                        "Firestore Error",
-                                        "Error deleting documents: ${e.message}"
-                                    )
+                val sCardNumber = cardNum.text.toString().trim()
+                val sCardDate = cardDate.text.toString().trim()
+                val sCvv = cvv.text.toString().trim()
+                if (!isCardNumberValid(sCardNumber)) {
+                    showToast("Empty / Invalid card number")
+                } else if (!isCardDateValid(sCardDate)) {
+                    showToast("Invalid card date. ")
+                } else if (!isCvvValid(sCvv)) {
+                    showToast("Invalid CVV. It should be a 3-digit number.")
+                } else {
+                    db.collection("donations")
+                        .add(donationData)
+                        .addOnSuccessListener { documentReference ->
+                            val newDocumentId = documentReference.id
+                            if (draftID != null) {
+                                // Check if the draftID exists in the SQLite "donationDraft" database
+                                if (isRecordExistsInDraft(draftID.toString())) {
+                                    // Delete the record from the draft
+                                    deleteRecordFromDraft(draftID.toString())
+                                } else {
+                                    Toast.makeText(this, "ID is null", Toast.LENGTH_LONG)
                                 }
-                        }else{
-                            Toast.makeText(this, "ID is null",Toast.LENGTH_LONG)
+                            }
+
+                            showToast("Donation submitted successfully!")
+                            createNotificationChannel(amount)
+                            sendNotification(amount)
+                            val intent = Intent(this, DonationCompleted::class.java)
+                            intent.putExtra("donationData", donationData)
+                            startActivity(intent)
+
+
                         }
-                        showToast("Donation submitted successfully!")
-                        createNotificationChannel(amount)
-                        sendNotification(amount)
-                        val intent = Intent(this, DonationCompleted::class.java)
-                        intent.putExtra("donationData", donationData)
-                        startActivity(intent)
+                        .addOnFailureListener {
+                            // Handle the error
 
-
-                    }
-                    .addOnFailureListener {
-                        // Handle the error
-
-                        showToast("Error submitting donation. Please try again.")
-                    }
+                            showToast("Error submitting donation. Please try again.")
+                        }
+                }
 
             })
+
+            //sqlite database connection (for donation_draft use)
 
             payLater =findViewById(R.id.payLater_btn)
             payLater.setOnClickListener(View.OnClickListener{
-                // Add the donation data to the Firestore collection
-                db.collection("donations_draft")
-                    .add(donationData)
-                    .addOnSuccessListener {
-                        // Donation data added successfully
-                        showToast("Donation has been save into draft!")
-
-                    }
-                    .addOnFailureListener {
-                        // Handle the error
-
-                        showToast("Error submitting donation. Please try again.")
-                    }
+            if(name!=null&&amount!=null&&contact!=null&&method!=null&&email!=null){
+                var result = dbcon.insert(name,formattedDate,amount,email,method,contact)
+                if(result.equals(-1)) {
+                    showToast("Donation not save into draft")
+                }else{
+                    showToast("Donation has been saved into draft")
+                }
+            }else{
+                showToast("Please enter all information")
+            }
 
             })
 
-
-
-
         }
+    }
+
+    private fun isRecordExistsInDraft(recordId: String): Boolean {
+        val cursor: Cursor = dbcon.retrieveDonationDraftByRecordId(recordId)
+
+        val exists = cursor.count > 0
+        cursor.close()
+
+        return exists
+    }
+    private fun isCardNumberValid(cardNumber: String): Boolean {
+        return cardNumber.length == 16 && cardNumber.matches(Regex("[0-9]+"))
+    }
+
+    private fun isCardDateValid(cardDate: String): Boolean {
+        val dateFormat = SimpleDateFormat("MM/yy", Locale.getDefault())
+        dateFormat.isLenient = false // This ensures strict date validation
+        try {
+            val currentDate = Calendar.getInstance().time
+            val parsedDate = dateFormat.parse(cardDate)
+            return parsedDate != null && parsedDate.after(currentDate)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    private fun isCvvValid(cvv: String): Boolean {
+        return cvv.length == 3 && cvv.matches(Regex("[0-9]+"))
+    }
+
+    private fun deleteRecordFromDraft(recordId: String) {
+        dbcon.deleteDonationDraftByRecordId(recordId)
     }
 
     private fun generateRandomID(): String {
@@ -181,7 +217,12 @@ class DonationPayment : AppCompatActivity() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntent:PendingIntent = PendingIntent.getActivity(this,0, intent,0)
+        val pendingIntent:PendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         val bitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.notification_icon)
         val bitmapLargeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_warning)
 
@@ -202,13 +243,6 @@ class DonationPayment : AppCompatActivity() {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return
             }
             notify(notificationId, builder.build())

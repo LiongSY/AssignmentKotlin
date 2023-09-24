@@ -3,8 +3,10 @@ package com.example.assignment.DonationModule
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.LiveFolders.INTENT
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.example.assignment.R
 
@@ -32,6 +34,12 @@ class DonationCompleted : AppCompatActivity() {
 
             val i=Intent(this, DonationRecord::class.java)
             startActivity(i)
+        }
+
+        val home = findViewById<ImageButton>(R.id.homeBtn)
+        home.setOnClickListener{
+            val intent = Intent(this,DonationPage::class.java)
+            startActivity(intent)
         }
 
     }

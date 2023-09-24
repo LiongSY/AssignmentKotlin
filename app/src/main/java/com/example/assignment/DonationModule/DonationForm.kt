@@ -8,7 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.example.assignment.R
+import java.util.regex.Pattern
 
 class DonationForm : AppCompatActivity() {
 
@@ -38,20 +40,43 @@ class DonationForm : AppCompatActivity() {
             val sContact = contact.text.toString().trim()
             val sAmount = amount.text.toString().trim()
 
-            val donationData = hashMapOf(
-                "name" to sName,
-                "email" to sEmail,
-                "contact" to sContact,
-                "amount" to sAmount
-            )
+           if (sName.isEmpty()) {
+               Toast.makeText(this, "Please Enter Your Name", Toast.LENGTH_SHORT).show()
+           } else if (sContact.isEmpty()) {
+               Toast.makeText(this, "Please Enter Your Contact No.", Toast.LENGTH_SHORT).show()
+           }else if( !validateContactFormat(sContact)){
+               Toast.makeText(this, "Invalid contact number format", Toast.LENGTH_SHORT).show()
+           }
+           else if (sAmount.isEmpty()) {
+               Toast.makeText(this, "Please Enter Your Amount", Toast.LENGTH_SHORT).show()
+           } else {
+               val donationData = hashMapOf(
+                   "name" to sName,
+                   "email" to sEmail,
+                   "contact" to sContact,
+                   "amount" to sAmount
+               )
 
-            val intent = Intent(this, DonationPayment::class.java)
-            intent.putExtra("donationData", donationData)
-            startActivity(intent)
-
-        })
+               val intent = Intent(this, DonationPayment::class.java)
+               intent.putExtra("donationData", donationData)
+               startActivity(intent)
+           }
+       })
     }
 
+    private fun validateContactFormat(contact: String): Boolean {
+        // Define a regular expression pattern for a 10 or 11 digit phone number
+        val phonePattern = "^(01\\d{8,9})$"
+
+        // Use the Pattern class to compile the pattern
+        val pattern = Pattern.compile(phonePattern)
+
+        // Use the Matcher class to match the input string against the pattern
+        val matcher = pattern.matcher(contact)
+
+        // Return true if the input matches the pattern, indicating a valid format
+        return matcher.matches()
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

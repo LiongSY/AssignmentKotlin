@@ -1,5 +1,7 @@
 package com.example.assignment.DonationModule
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment.DonationModule.DonationModuleAdapter.DonationAdapter
+import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.DonationModule.DonationModuleAdapter.DonationReportAdapter
 import com.example.assignment.R
 import com.google.firebase.firestore.DocumentChange
@@ -26,12 +28,16 @@ class DonationReport : AppCompatActivity() {
     private lateinit var userRecyclerview: RecyclerView
     private lateinit var userArrayList: ArrayList<Donation>
     private lateinit var myAdapter: DonationReportAdapter
+    private val dbcon: DBConnection = DBConnection(this,"Education",1)
 
     private var totalDonationAmount: Float = 0.0f
     private val calendar: Calendar = Calendar.getInstance()
     private val currentMonth: Int = calendar.get(Calendar.MONTH)
     private val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR)
 
+    private val currentDate: Date = calendar.time
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private val formattedDate: String = dateFormat.format(currentDate)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donation_report)
@@ -39,6 +45,8 @@ class DonationReport : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar5))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val date:TextView = findViewById(R.id.date)
+        date.text = formattedDate.toString()
         userRecyclerview = findViewById(R.id.donation_list)
         userRecyclerview.layoutManager = LinearLayoutManager(this)
         userRecyclerview.setHasFixedSize(true)
@@ -63,6 +71,16 @@ class DonationReport : AppCompatActivity() {
                     value: QuerySnapshot?,
                     error: FirebaseFirestoreException?
                 ) {
+                    if (error != null) {
+                        Log.e("Firestore Error", error.message.toString())
+                        return
+                    }
+
+                    if (value == null || value.isEmpty()) {
+                        // No records found, display an alert message
+                        showNoRecordsFoundAlert()
+                        return
+                    }
                     userArrayList.clear() // Clear the previous data
 
                     for (dc: DocumentChange in value?.documentChanges!!) {
@@ -120,6 +138,7 @@ class DonationReport : AppCompatActivity() {
 
     }
 
+
     private fun isDateInCurrentMonth(date: String): Boolean {
         // Parse the date string and compare with the current month
         // You may need to adjust the date format according to your Firestore data
@@ -158,6 +177,12 @@ class DonationReport : AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showNoRecordsFoundAlert() {
+        val message = "No donation records found."
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        // You can also show a dialog or any other UI component to inform the user.
     }
 
 

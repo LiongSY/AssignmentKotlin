@@ -93,7 +93,7 @@
         android:width="1dp"
         android:background="@drawable/edittext_background"
         android:ems="10"
-        android:hint="Enter your contact"
+        android:hint="DDDDDDDDDD"
         android:inputType="phone" />
 
     <TextView

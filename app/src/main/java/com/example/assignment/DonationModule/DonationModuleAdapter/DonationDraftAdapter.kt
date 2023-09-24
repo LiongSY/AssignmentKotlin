@@ -12,13 +12,18 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.DonationModule.Database.DBConnection
 import com.example.assignment.DonationModule.Donation
 import com.example.assignment.DonationModule.DonationPayment
 import com.example.assignment.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 
-class DonationDraftAdapter(private val donationList : ArrayList<Donation>, private val recyclerView: RecyclerView) : RecyclerView.Adapter<DonationDraftAdapter.MyViewHolder>() {
+class DonationDraftAdapter(
+    private val donationList: ArrayList<Donation>,
+    private val recyclerView: RecyclerView,
+    private val dbConnection: DBConnection // Pass the DBConnection instance
+) : RecyclerView.Adapter<DonationDraftAdapter.MyViewHolder>() {
 
     val db = FirebaseFirestore.getInstance()
 
@@ -52,7 +57,7 @@ class DonationDraftAdapter(private val donationList : ArrayList<Donation>, priva
                 .setPositiveButton("Yes"){
                         dialog,_->
                     // Call a function to delete the item from Firestore
-                    deleteItemFromFirestore(userID, position, currentitem,userEmail,c) // You need to define this function
+                    deleteItemFromFirestore(userID, position, currentitem,c) // You need to define this function
                     notifyDataSetChanged()
                     Toast.makeText(c,"Record Deleted", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
@@ -106,7 +111,9 @@ class DonationDraftAdapter(private val donationList : ArrayList<Donation>, priva
                     val newContact = contactEditText.text.toString()
                     if (newName.isNotBlank() && newAmount != null) {
                         // Update Firestore data with the new values
-                        editItemFromFirestore(userID, position, currentitem, userEmail, newName, newAmount,newContact)
+                        if (userEmail != null) {
+                            editItemFromFirestore(userID, position, currentitem, newName, newAmount,newContact)
+                        }
                         notifyDataSetChanged()
                         Toast.makeText(c, "Donation Draft Record Information is Edited", Toast.LENGTH_SHORT).show()
                     } else {
@@ -128,66 +135,50 @@ class DonationDraftAdapter(private val donationList : ArrayList<Donation>, priva
         userID: String?,
         position: Int,
         currentitem: Donation,
-        userEmail: String?,
         newName: String,
         newAmount: String,
         newContact: String
     ) {
-
-        val db = FirebaseFirestore.getInstance()
-        val donationsCollection = db.collection("donations_draft")
-
-        // Build a query to find the document with the matching 'id' field
-        val query = donationsCollection
-            .whereEqualTo("email", userEmail)
-            .whereEqualTo("id", userID)
-
-        query.get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    // Update the document with the new data
-                    document.reference.update(
-                        "name", newName,
-                        "amount", newAmount,
-                        "contact",newContact
-                    )
-                }
-            }
+        val updated = dbConnection.updateDonationDraft(
+            userID,
+            newName,
+            newAmount,
+            newContact
+        )
+        if (updated > 0) {
+            // Update the local list with the edited values
+            currentitem.name = newName
+            currentitem.amount = newAmount
+            currentitem.contact = newContact
+            notifyItemChanged(position)
+        } else {
+            // Handle the case where the update in SQLite fails
+            Toast.makeText(recyclerView.context, "Edit failed", Toast.LENGTH_SHORT).show()
+        }
     }
+
 
     private fun deleteItemFromFirestore(
         id: String?,
         position: Int,
         currentitem: Donation,
-        email: String?,
         c: Context
     ) {
-        val db = FirebaseFirestore.getInstance()
-        val donationsCollection = db.collection("donations_draft")
-
-        // Build a query to find the document with the matching 'id' field
-        val query = donationsCollection
-            .whereEqualTo("email",email)
-            .whereEqualTo("id",id)
-
-        query.get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    // Delete each document that matches the query
-                    document.reference.delete()
-
-                     Snackbar.make(recyclerView, "Record Deleted", Snackbar.LENGTH_SHORT)
-                    .setAction("Undo") {
-
-                        addCurrentItemToFirestore(currentitem,c)
-                    }.show()
-
-                }
-            }
-            .addOnFailureListener { e ->
-                // Handle any errors that occur during the query or delete operation
-                Log.e("Firestore Error", "Error deleting documents: ${e.message}")
-            }
+        val deleted = dbConnection.deleteDonationDraft(id)
+        if (deleted > 0) {
+            // Remove the item from the local list
+            donationList.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, itemCount)
+            Snackbar.make(recyclerView, "Record Deleted", Snackbar.LENGTH_SHORT)
+                .setAction("Undo") {
+                   dbConnection.insert(currentitem.name.toString(),currentitem.date.toString(),currentitem.amount.toString(),currentitem.email.toString(),currentitem.method.toString(),currentitem.contact.toString())
+                    Snackbar.make(recyclerView, "Undo Successfully, Refresh Activity", Snackbar.LENGTH_SHORT).show()
+                }.show()
+        } else {
+            // Handle the case where the deletion in SQLite fails
+            Toast.makeText(c, "Delete failed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun addCurrentItemToFirestore(currentitem: Donation, context: Context) {
