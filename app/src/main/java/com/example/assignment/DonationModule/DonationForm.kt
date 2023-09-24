@@ -1,6 +1,7 @@
 package com.example.assignment.DonationModule
 
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,10 +34,14 @@ class DonationForm : AppCompatActivity() {
 
         donateBtn = findViewById<Button>(R.id.donate_button)
 
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val email = sharedPreferences.getString("email", "")
+        val password = sharedPreferences.getString("password", "")
+
        donateBtn.setOnClickListener(View.OnClickListener {
             val sName = name.text.toString().trim()
             //after done change to get email from session
-            val sEmail = "tengjie419@gmail.com"
+            val sEmail = email
             val sContact = contact.text.toString().trim()
             val sAmount = amount.text.toString().trim()
 

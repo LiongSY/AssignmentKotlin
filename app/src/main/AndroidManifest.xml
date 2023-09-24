@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -61,6 +62,69 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+        <activity
+            android:name=".UserManagement.CheckBackDeleteRecord"
+            android:exported="false"
+            android:label="Deleted Record"
+            android:parentActivityName=".UserManagement.addInstituition" />
+        <activity
+            android:name=".UserManagement.studentPanel"
+            android:exported="false"
+            android:label="Student"
+            android:parentActivityName=".UserManagement.login" />
+        <activity
+            android:name=".UserManagement.teacherPanel"
+            android:exported="false"
+            android:label="Teacher"
+            android:parentActivityName=".UserManagement.login" />
+        <activity
+            android:name=".UserManagement.viewAllAcc"
+            android:exported="false"
+            android:label="User Accounts"
+            android:parentActivityName=".UserManagement.adminPanel" />
+        <activity
+            android:name=".UserManagement.AccountDetails"
+            android:exported="false"
+            android:label="Account Details"
+            android:parentActivityName=".UserManagement.adminPanel" />
+        <activity
+            android:name=".UserManagement.emailDetails"
+            android:exported="false"
+            android:label="Email Details"
+            android:parentActivityName=".UserManagement.addInstituition" />
+        <activity
+            android:name=".UserManagement.addNewEmailType"
+            android:exported="false"
+            android:label="Institution Management"
+            android:parentActivityName=".UserManagement.addInstituition" />
+        <activity
+            android:name=".UserManagement.passwordReset"
+            android:exported="false"
+            android:label="Reset Password"
+            android:parentActivityName=".UserManagement.login" />
+        <activity
+            android:name=".UserManagement.registration"
+            android:exported="false" />
+        <activity
+            android:name=".UserManagement.addInstituition"
+            android:exported="false"
+            android:label="Institution"
+            android:parentActivityName=".UserManagement.adminPanel" />
+        <activity
+            android:name=".UserManagement.adminPanel"
+            android:exported="false"
+            android:label="Admin Page"
+            android:parentActivityName=".UserManagement.login" />
+        <activity
+            android:name=".UserManagement.DBHelper"
+            android:exported="false" />
+        <activity
+            android:name=".UserManagement.login"
+            android:exported="false" />
+
     </application>
 
 </manifest>

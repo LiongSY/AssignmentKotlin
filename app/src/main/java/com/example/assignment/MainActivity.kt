@@ -1,31 +1,30 @@
 package com.example.assignment
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import com.example.assignment.DonationModule.DonationPage
-import com.example.assignment.DonationModule.DonationReport
-import com.example.assignment.databinding.ActivityMainBinding
+import com.example.assignment.UserManagement.login
+import com.example.assignment.UserManagement.registration
+
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val donateBtn:Button = findViewById(R.id.donate_btn)
-        val reportBtn:Button = findViewById(R.id.report_btn)
-        donateBtn.setOnClickListener {
-            val i = Intent(this, DonationPage::class.java)
-            startActivity(i)
+        val loginBtn  = findViewById<Button>(R.id.login)
+        val signUpBtn  = findViewById<Button>(R.id.signup)
+
+        loginBtn.setOnClickListener(){
+            val intent = Intent(this, login::class.java)
+            startActivity(intent)
         }
 
-        reportBtn.setOnClickListener(View.OnClickListener {
-            val i = Intent(this, DonationReport::class.java)
-            startActivity(i)
-        })
+        signUpBtn.setOnClickListener(){
+            val intent = Intent(this, registration::class.java)
+            startActivity(intent)
+        }
 
     }
+
 }

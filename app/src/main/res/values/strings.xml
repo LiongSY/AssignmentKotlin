@@ -19,4 +19,8 @@
 
     <string name="draft_desc">draft button\n\n</string>
     <string name="date">Today Date :</string>
+    <string name="login">Login to Account</string>
+    <string name="btn_login">Login</string>
+    <string name="user_ID">ID</string>
+    <string name="user_password">Password</string>
 </resources>

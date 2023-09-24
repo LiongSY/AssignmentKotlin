@@ -1,5 +1,6 @@
 package com.example.assignment.DonationModule
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -37,6 +38,10 @@ class DonationRecord : AppCompatActivity() {
         userRecyclerview = findViewById(R.id.userList)
         userRecyclerview.layoutManager = LinearLayoutManager(this)
         userRecyclerview.setHasFixedSize(true)
+
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val email = sharedPreferences.getString("email", "")
+        val password = sharedPreferences.getString("password", "")
 
         val draftBtn = findViewById<Button>(R.id.draft_btn)
 
@@ -77,9 +82,9 @@ class DonationRecord : AppCompatActivity() {
 
         userRecyclerview.adapter = myAdapter
 
-        val email:String = "tengjie419@gmail.com"
+        val emailInput:String = email.toString()
 
-        EventChangeListener(email)
+        EventChangeListener(emailInput)
 
     }
 
