@@ -45,7 +45,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 
         return result
     }
 
-    fun retrieveDonationDrafts(): Cursor {
+    fun retrieveDonationDrafts(email: String?): Cursor {
         val db: SQLiteDatabase = readableDatabase
         val columns = arrayOf(
             DBConnection.col1,
@@ -56,8 +56,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "Education", null, 
             DBConnection.col6,
             DBConnection.col7
         )
-        return db.query(DBConnection.tableName, columns, null, null, null, null, null)
+        val selection = "${DBConnection.col5} = ?" // Use DBConnection.col5 for the "email" column
+        val selectionArgs = arrayOf(email) // Pass the email as an argument
+
+        return db.query(DBConnection.tableName, columns, selection, selectionArgs, null, null, null)
     }
+
 
     fun retrieveDonationDraftByRecordId(recordId: String): Cursor {
         val db = this.readableDatabase

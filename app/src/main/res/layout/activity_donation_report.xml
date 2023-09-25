@@ -19,10 +19,11 @@
     <TextView
         android:id="@+id/textView12"
         style="@style/AmountText"
-        android:layout_width="415dp"
+        android:layout_width="0dp"
         android:layout_height="180dp"
         android:background="@color/teal_200"
         android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
@@ -35,6 +36,8 @@
         android:layout_marginTop="48dp"
         android:text="Total Donation : RM"
         android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.013"
         app:layout_constraintStart_toStartOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
@@ -52,21 +55,22 @@
     <TextView
         android:id="@+id/textView20"
         style="@style/AMOUNT_TEXT"
-        android:layout_width="141dp"
+        android:layout_width="130dp"
         android:layout_height="81dp"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="144dp"
         android:background="@drawable/column_shape"
         android:paddingTop="5dp"
         android:text="This Week :"
         android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
     <TextView
         android:id="@+id/textView21"
         style="@style/AMOUNT_TEXT"
-        android:layout_width="141dp"
+        android:layout_width="130dp"
         android:layout_height="81dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="144dp"
@@ -74,6 +78,8 @@
         android:paddingTop="5dp"
         android:text="This Month"
         android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.305"
         app:layout_constraintStart_toEndOf="@+id/textView20"
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
@@ -125,9 +131,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/donation_list"
-        android:layout_width="412dp"
-        android:layout_height="524dp"
-        android:layout_marginTop="48dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

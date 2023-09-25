@@ -1,5 +1,6 @@
 package com.example.assignment.DonationModule
 import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -68,13 +69,16 @@ class DonationDraftRecord : AppCompatActivity() {
         myAdapter = DonationDraftAdapter(donationArrayList, donationRecyclerview, dbConnection)
         donationRecyclerview.adapter = myAdapter
 
-        loadDonationDraftsAsync()
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val email = sharedPreferences.getString("email", "")
+
+        loadDonationDraftsAsync(email)
     }
 
-    private fun loadDonationDraftsAsync() {
+    private fun loadDonationDraftsAsync(email: String?) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val donations = retrieveDonationDraftsFromCursor(dbConnection.retrieveDonationDrafts())
+                val donations = retrieveDonationDraftsFromCursor(dbConnection.retrieveDonationDrafts(email))
                 donationArrayList.clear()
                 donationArrayList.addAll(donations)
                 withContext(Dispatchers.Main) {
